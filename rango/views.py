@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 
 def about(request):
-    return HttpResponse("ssdsafdafdsa")
+    return render(request, 'rango/about.html')
 
 def index(request):
    context_dict = {'boldmessage': "Crunchy, creamy, cookie, candy, cupcake!"}
