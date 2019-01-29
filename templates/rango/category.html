@@ -26,7 +26,13 @@
     <div>
             <!-- a link to index page-->
             <a href = "/rango/"> Index Page </a> <br />
+            
     </div>
-            <a href="/rango/category/{{category.slug}}/add_page/">Add Page</a> <br />
+          {% if user.is_authenticated %}
+                <ul>
+                   <a href="/rango/category/{{category.slug}}/add_page/">Add a New Page</a> <br />
+                </ul>
+            {% endif %}
+       
     
  {% endblock %}
