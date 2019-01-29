@@ -15,7 +15,9 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'rango/about.html')
+    print(request.method)
+    print(request.user)
+    return render(request, 'rango/about.html',{})
 
 
 def show_category(request, category_name_slug):
@@ -39,8 +41,9 @@ def add_category(request):
         form = CategoryForm(request.POST)
         # Have we been provided with a valid form?
         if form.is_valid():
-            cat = form.save(commit=True)
-            print(cat, cat.slug)
+           # cat = form.save(commit=True)
+           # print(cat, cat.slug)
+            form.save(commit=True)
             return index(request)
         
         else:

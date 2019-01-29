@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 from django.template.defaultfilters import slugify
 
 
@@ -27,3 +28,9 @@ class Page(models.Model):
     
     def __str__(self): # For Python 2, use __unicode__ too
         return self.title
+
+class PageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'url')
+
+    def __str__(self):
+        return self.list_display
