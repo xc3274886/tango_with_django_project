@@ -5,13 +5,15 @@ from rango.forms import CategoryForm,PageForm
 from rango.forms import UserForm,UserProfileForm
 from django.contrib.auth import authenticate,login
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
-    context_dict = {'categories': category_list, 'pagelist': page_list,}
+    context_dict = {'categories': category_list, 'pages': page_list,}
 
     # Render the response and send it back!
     return render(request, 'rango/index.html', context_dict)
@@ -130,7 +132,16 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied.")
 
     else:
-        return render(request, 'rango/login.html', {})
+        return render(request, 'rango/user_login.html', {})
+
+@login_required
+def restricted(request):
+     return HttpResponse("Since you're logged in, you can see this text!")
 
 
-
+@login_required
+def user_logout(request):
+# Since we know the user is logged in, we can now just log them out.
+   logout(request)
+# Take the user back to the homepage.
+   return HttpResponseRedirect(reverse('index'))
