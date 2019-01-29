@@ -7,7 +7,8 @@ from rango.forms import CategoryForm,PageForm
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
-    context_dict = {'categories': category_list}
+    page_list = Page.objects.order_by('-views')[:5]
+    context_dict = {'categories': category_list, 'pagelist': page_list,}
 
     # Render the response and send it back!
     return render(request, 'rango/index.html', context_dict)
@@ -41,8 +42,8 @@ def add_category(request):
         form = CategoryForm(request.POST)
         # Have we been provided with a valid form?
         if form.is_valid():
-           # cat = form.save(commit=True)
-           # print(cat, cat.slug)
+            cat = form.save(commit=True)
+            print(cat, cat.slug)
             form.save(commit=True)
             return index(request)
         
