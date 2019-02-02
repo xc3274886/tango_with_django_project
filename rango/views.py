@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate,login
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from datetime import datetime
 
 
 
@@ -16,14 +17,20 @@ def index(request):
     context_dict = {'categories': category_list, 'pages': page_list,}
 
     # Render the response and send it back!
-    return render(request, 'rango/index.html', context_dict)
+    response = render(request, 'rango/index.html', context_dict)
+    visitor_cookie_handler(request,response)
+    
+    return response
 
 
 
 def about(request):
     print(request.method)
     print(request.user)
-    return render(request, 'rango/about.html',{})
+
+    visitor_cookie_handler(request)
+    response = render(request, 'rango/about.html',{})
+    return response
 
 
 def show_category(request, category_name_slug):
@@ -145,3 +152,18 @@ def user_logout(request):
    logout(request)
 # Take the user back to the homepage.
    return HttpResponseRedirect(reverse('index'))
+
+
+def visitor_cookie_handler(request, response):
+    visits = int(request.COOKIES.get('visits', '1'))
+
+
+    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
+                                        '%Y-%m-%d %H:%M:%S')
+    if (datetime.now() - last_visit_time).days > 0:
+        visits = visits + 1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_cookie
+    request.session['visits'] = visits
